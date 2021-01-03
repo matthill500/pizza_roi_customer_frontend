@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="container">
     <h1>Checkout</h1>
     <table class="table table-hover" v-if="cart.length">
       <caption class="text-right h3">
@@ -25,12 +25,16 @@
           </td>
           <th scope="row">{{item.product.name}}</th>
           <td class="text-center">{{item.qty}}</td>
-          <td class="text-right">{{Number(item.product.price)}}</td>
-          <td class="text-right">{{Number(item.qty * item.product.price)}}</td>
+          <td class="text-right">{{Number(item.product.retailPrice)}}</td>
+          <td class="text-right">{{Number(item.qty * item.product.retailPrice)}}</td>
         </tr>
       </tbody>
     </table>
-    <router-link class="btn btn-sm btn-outline-info text-dark" to="/">Keep Shopping</router-link>
+
+
+
+
+    <router-link class="btn btn-sm btn-outline-info text-dark" style="margin-top:10px" to="/products">Keep Shopping</router-link>
   </div>
 </template>
 
@@ -39,9 +43,21 @@ import Price from "./Price.vue";
 
 export default{
   name: "checkout",
+  data: function(){
+    return{
+
+    }
+  },
   props: ["cart", "carTotal"],
   components:{
     Price
-  }
+  },
+  mounted: function () {
+
+ }
 }
 </script>
+
+<style>
+
+</style>

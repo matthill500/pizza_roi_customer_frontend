@@ -24,6 +24,8 @@ import Product from "./components/Product.vue";
 import Logout from "./components/auth/Logout.vue";
 import Checkout from "./components/Checkout.vue";
 
+
+
 var VueScrollTo = require('vue-scrollto');
 Vue.use(VueScrollTo)
 
@@ -70,7 +72,6 @@ const router = new VueRouter({
       requiresAuth: true,
     }
   }
-
  ]
 });
 

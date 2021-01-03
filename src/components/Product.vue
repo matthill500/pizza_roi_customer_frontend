@@ -6,7 +6,7 @@
     :cartQty="cartQty"
     :carTotal="carTotal"
     ></cartNav>
-    <productList :pizzas="pizzas" :sides="sides"></productList>
+    <productList :pizzas="pizzas" :deals="deals" :sides="sides"></productList>
   </div>
 </template>
 
@@ -21,6 +21,7 @@ export default{
   props: [
     "pizzas",
     "sides",
+    "deals",
     "maximum",
     "cart",
     "cartQty",

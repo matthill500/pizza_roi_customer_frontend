@@ -17,6 +17,7 @@ export const store = new Vuex.Store({
     }
   },
   mutations:{
+
     retrieveToken(state, token){
       state.token = token
     },
@@ -77,6 +78,21 @@ export const store = new Vuex.Store({
             .catch(error => {
               localStorage.removeItem('token')
               context.commit('destroyToken')
+              reject(error)
+            })
+        })
+      }
+    },
+    getDeal(context, id){
+      console.log(id);
+      axios.defaults.headers.common['Authorization'] = 'Bearer '+context.state.token
+      if(context.getters.loggedIn){
+        return new Promise((resolve, reject) => {
+          axios.get('/deals')
+            .then(response => {
+              resolve(response)
+            })
+            .catch(error => {
               reject(error)
             })
         })

@@ -7,6 +7,7 @@
       :carTotal="carTotal"
       :pizzas="pizzas"
       :sides="sides"
+      :deals="deals"
       @delete="deleteItem"
       @add="addItem"
       ></router-view>
@@ -23,7 +24,8 @@ export default {
     return{
       cart:[],
       pizzas: null,
-      sides: null
+      sides: null,
+      deals: null
     }
   },
   components: {
@@ -37,6 +39,10 @@ export default {
     this.$store.dispatch('getSides')
     .then(response => {
       this.sides = response.data.data
+    });
+    this.$store.dispatch('getDeal')
+    .then(response => {
+      this.deals = response.data.data
     });
   },
   computed:{
@@ -72,7 +78,6 @@ export default {
       }else{
         this.cart.push({product: product, qty: 1});
       }
-      console.log(this.cart);
     },
     deleteItem: function(id){
       if(this.cart[id].qty>1){
