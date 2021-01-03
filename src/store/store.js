@@ -8,7 +8,8 @@ axios.defaults.baseURL = 'http://127.0.0.1:8000/api'
 
 export const store = new Vuex.Store({
   state:{
-    token: localStorage.getItem('token') || null
+    token: localStorage.getItem('token') || null,
+    pizzas: []
   },
   getters:{
     loggedIn(state){
@@ -76,6 +77,38 @@ export const store = new Vuex.Store({
             .catch(error => {
               localStorage.removeItem('token')
               context.commit('destroyToken')
+              reject(error)
+            })
+        })
+      }
+    },
+    getPizzas(context){
+      axios.defaults.headers.common['Authorization'] = 'Bearer '+context.state.token
+
+      if(context.getters.loggedIn){
+        return new Promise((resolve, reject) => {
+          axios.get('/pizzas')
+            .then(response => {
+              resolve(response)
+              // console.log(response)
+            })
+            .catch(error => {
+              reject(error)
+            })
+        })
+      }
+    },
+    getSides(context){
+      axios.defaults.headers.common['Authorization'] = 'Bearer '+context.state.token
+
+      if(context.getters.loggedIn){
+        return new Promise((resolve, reject) => {
+          axios.get('/sides')
+            .then(response => {
+              resolve(response)
+              // console.log(response)
+            })
+            .catch(error => {
               reject(error)
             })
         })
