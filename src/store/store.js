@@ -9,23 +9,42 @@ axios.defaults.baseURL = 'http://127.0.0.1:8000/api'
 export const store = new Vuex.Store({
   state:{
     token: localStorage.getItem('token') || null,
-    pizzas: []
+    pizzas: [],
+      first_name: null,
+      last_name: null,
+      id: null
   },
   getters:{
     loggedIn(state){
-      return state.token !== null
+       return state.token !== null
+    },
+    user(state){
+      return {
+        first_name: state.first_name,
+        last_name: state.last_name,
+        id: state.id,
+      }
     }
   },
   mutations:{
-
-    retrieveToken(state, token){
-      state.token = token
+    retrieveToken(state, data){
+      state.token = data.token
+      state.first_name = data.first_name
+      state.last_name = data.last_name
+      state.id = data.id
+    },
+    setUser(state, user){
+      // console.log(user, 'test');
+      state.first_name = user.first_name
+      state.last_name = user.last_name
+      state.id = user.id
     },
     destroyToken(state){
       state.token = null
     }
   },
   actions:{
+
     register(context, data){
       return new Promise((resolve, reject) => {
         axios.post('/register', {
@@ -44,6 +63,27 @@ export const store = new Vuex.Store({
           })
       })
     },
+    getUser(context, token){
+      axios.defaults.headers.common['Authorization'] = 'Bearer '+token
+      return new Promise((resolve, reject) => {
+        axios.get('/user')
+          .then(response => {
+            // console.log(response);
+            // const token = response.data.token
+            // localStorage.setItem('token', token)
+            context.commit('setUser', response.data.user)
+            // resolve(true)
+            // console.log(response)
+          })
+          .catch(error => {
+            console.log(error)
+            // reject(false)
+          })
+          .finally(() => {
+            resolve(true)
+          })
+      })
+    },
     login(context, credentials){
       return new Promise((resolve, reject) => {
         axios.post('/login', {
@@ -53,7 +93,7 @@ export const store = new Vuex.Store({
           .then(response => {
             const token = response.data.token
             localStorage.setItem('token', token)
-            context.commit('retrieveToken', token)
+            context.commit('retrieveToken', response.data)
             resolve(response)
             // console.log(response)
           })
@@ -84,7 +124,6 @@ export const store = new Vuex.Store({
       }
     },
     getDeal(context, id){
-      console.log(id);
       axios.defaults.headers.common['Authorization'] = 'Bearer '+context.state.token
       if(context.getters.loggedIn){
         return new Promise((resolve, reject) => {

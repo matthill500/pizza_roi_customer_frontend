@@ -7,6 +7,7 @@ import { store } from './store/store'
 import "bootstrap";
 import "bootstrap/dist/css/bootstrap.css";
 
+
 import {library} from "@fortawesome/fontawesome-svg-core";
 import "animate.css/animate.css";
 
@@ -23,7 +24,7 @@ import Home from "./components/Home.vue";
 import Product from "./components/Product.vue";
 import Logout from "./components/auth/Logout.vue";
 import Checkout from "./components/Checkout.vue";
-
+import Success from "./components/Success.vue";
 
 
 var VueScrollTo = require('vue-scrollto');
@@ -71,6 +72,13 @@ const router = new VueRouter({
     meta: {
       requiresAuth: true,
     }
+  },
+  {
+    path: "/success",
+    component: Success,
+    meta: {
+      requiresAuth: true,
+    }
   }
  ]
 });
@@ -97,8 +105,12 @@ router.beforeEach((to, from, next) => {
   }
 })
 
+const token = localStorage.getItem('token');
+
+store.dispatch('getUser', token).then(() => {
 new Vue({
   render: h => h(App),
   router,
   store: store
 }).$mount('#app')
+})

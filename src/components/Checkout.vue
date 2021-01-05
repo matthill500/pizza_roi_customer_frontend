@@ -31,7 +31,7 @@
       </tbody>
     </table>
 
-
+    <place-order :cart="cart" :carTotal="carTotal"></place-order>
 
 
     <router-link class="btn btn-sm btn-outline-info text-dark" style="margin-top:10px" to="/products">Keep Shopping</router-link>
@@ -39,8 +39,9 @@
 </template>
 
 <script>
+import axios from 'axios'
 import Price from "./Price.vue";
-
+import PlaceOrder from './placeOrder.vue'
 export default{
   name: "checkout",
   data: function(){
@@ -50,11 +51,12 @@ export default{
   },
   props: ["cart", "carTotal"],
   components:{
-    Price
+    Price,
+    PlaceOrder
   },
-  mounted: function () {
+  methods: {
 
- }
+  }
 }
 </script>
 
