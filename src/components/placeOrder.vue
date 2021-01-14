@@ -42,7 +42,8 @@
   export default {
     props: [
       'cart',
-      'carTotal'
+      'carTotal',
+      'shopId'
   ],
     data() {
       return {
@@ -77,15 +78,18 @@
             console.log('error!', result)
             return
           }
+      
           this.error = null;
           this.token = result.setupIntent.payment_method
-          console.log(this.token);
+          // console.log(this.cart);
           axios.post('/orders',{
             price: this.carTotal,
-            shop_id: 2,
-            customer_id: 1,
+            shop_id:  this.shopId,
+            customer_id: this.user.customer_id,
             token: this.token,
-            user_id: this.user.id
+            user_id: this.user.user_id,
+            cart: this.cart,
+            status: 'confirmed'
           })
             .then(response => {
               if(response.data.status !== 'success') {
@@ -100,7 +104,7 @@
       }
     },
     mounted() {
-      axios.get('/user/setup-intent/'+parseInt(this.user.id))
+      axios.get('/user/setup-intent/'+parseInt(this.user.user_id))
         .then(response => {
           if(response.data.status !== 'success') {
              console.log('error!', response.data)
@@ -114,7 +118,8 @@
     beforeDestroy() {
       card.destroy(this.$refs.card)
       card = null
-    }
+    },
+    
   }
 </script>
 

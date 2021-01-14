@@ -2,13 +2,13 @@
   <nav class="navbar navbar-default">
       <div class="container row-12">
         <div class="col-4 float-left block">
-          <a href="#pizzas"><h3>Pizzas</h3></a>
+          <a href="#" v-scroll-to="'#pizzas'"><h3>Pizzas</h3></a>
         </div>
         <div class="col-4 float-left block">
           <a href="#" v-scroll-to="'#sides'"><h3>Sides</h3></a>
        </div>
        <div class="col-4 float-left block">
-         <a href="#deals"><h3>Deals</h3></a>
+         <a href="#" v-scroll-to="'#deals'"><h3>Deals</h3></a>
       </div>
       </div>
   </nav>

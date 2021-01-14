@@ -39,7 +39,6 @@ export default {
         password: this.password
       })
       .then(response => {
-       
        this.$router.push('/products');
       })
     }

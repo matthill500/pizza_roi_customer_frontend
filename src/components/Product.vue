@@ -18,11 +18,15 @@ import ProductList from './ProductList.vue';
 
 export default{
   name: 'products',
+  data: function(){
+    return{
+      pizzas: null,
+      sides: null,
+      deals: null,
+      shops: null
+    }
+  },
   props: [
-    "pizzas",
-    "sides",
-    "deals",
-    "maximum",
     "cart",
     "cartQty",
     "carTotal"
@@ -31,6 +35,24 @@ export default{
     cartNav,
     ProductList,
     productNav
-  }
+  },
+  created(){
+    this.$store.dispatch('getPizzas')
+    .then(response => {
+      this.pizzas = response.data.data
+    });
+    this.$store.dispatch('getSides')
+    .then(response => {
+      this.sides = response.data.data
+    });
+    this.$store.dispatch('getDeal')
+    .then(response => {
+      this.deals = response.data.data
+    });
+    this.$store.dispatch('getShopEircodes')
+    .then(response => {
+      this.shops = response.data.data
+    });
+  },
 }
 </script>

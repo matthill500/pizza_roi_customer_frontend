@@ -5,9 +5,6 @@
       :cart="cart"
       :cartQty="cartQty"
       :carTotal="carTotal"
-      :pizzas="pizzas"
-      :sides="sides"
-      :deals="deals"
       @delete="deleteItem"
       @add="addItem"
       ></router-view>
@@ -22,28 +19,14 @@ export default {
   name: 'App',
   data: function(){
     return{
-      cart:[],
-      pizzas: null,
-      sides: null,
-      deals: null
+      cart:[]
     }
+  },
+  state: {
+   localStorage: []
   },
   components: {
     navBar
-  },
-  created(){
-    this.$store.dispatch('getPizzas')
-    .then(response => {
-      this.pizzas = response.data.data
-    });
-    this.$store.dispatch('getSides')
-    .then(response => {
-      this.sides = response.data.data
-    });
-    this.$store.dispatch('getDeal')
-    .then(response => {
-      this.deals = response.data.data
-    });
   },
   computed:{
       cartQty: function(){
@@ -56,6 +39,7 @@ export default {
       carTotal: function(){
         let sum = 0;
         for (let key in this.cart){
+          console.log(this.cart);
           sum = sum+(this.cart[key].product.retailPrice * this.cart[key].qty);
         }
         return sum;
@@ -78,6 +62,10 @@ export default {
       }else{
         this.cart.push({product: product, qty: 1});
       }
+      if(localStorage.getItem('cart')){
+        localStorage.removeItem(this.cart);
+      }
+      localStorage.setItem('cart', JSON.stringify(this.cart));
     },
     deleteItem: function(id){
       if(this.cart[id].qty>1){
@@ -86,7 +74,15 @@ export default {
         this.cart.splice(id, 1);
       }
     },
-  }
+    setCart: function(){
+      this.cart = JSON.parse(localStorage.getItem('cart'));
+    }
+  },
+ created: function(){
+   if(localStorage.getItem('cart')){
+     this.setCart()
+   }  
+ }
 }
 </script>
 

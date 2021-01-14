@@ -31,7 +31,13 @@
       </tbody>
     </table>
 
-    <place-order :cart="cart" :carTotal="carTotal"></place-order>
+<div v-if="locations && locations.length > 0">
+  <div v-for="(item, index) in newShops" :key="index">    
+     <p>{{item.name}} is {{item.distance.text}} away </p>
+  </div>
+</div>
+
+    <place-order :cart="cart" :carTotal="carTotal" :shopId="shopId"></place-order>
 
 
     <router-link class="btn btn-sm btn-outline-info text-dark" style="margin-top:10px" to="/products">Keep Shopping</router-link>
@@ -39,24 +45,103 @@
 </template>
 
 <script>
+import _ from 'lodash';
 import axios from 'axios'
 import Price from "./Price.vue";
 import PlaceOrder from './placeOrder.vue'
+import {mapGetters} from 'vuex'
+import $ from 'jquery'
+
+
+
 export default{
   name: "checkout",
-  data: function(){
-    return{
-
+  props: ["cart", "carTotal"],  
+  data: () => {
+    return {
+      locations: [],
+      shopId: null,
+      newShops: []
     }
   },
-  props: ["cart", "carTotal"],
   components:{
     Price,
     PlaceOrder
   },
-  methods: {
+   computed:{
+      ...mapGetters({
+       shops: 'shops',
+       user: 'user'
+     })
+  },
+  methods:{
+    calcDist() {
+      let app = this;
 
+      const shops = this.shops.shops;
+
+      console.log(shops);
+
+      let customerEircode = this.user.userEircode+', Ireland';
+
+      const eircodes = [];
+
+      for(let i = 0; i<shops.length; i++){
+          eircodes.push(shops[i].eircode);
+        }
+
+      const newEircodes = eircodes.map(eircode => eircode+', Ireland');
+
+      var service = new window.google.maps.DistanceMatrixService();
+      service.getDistanceMatrix(
+        {
+          origins: [customerEircode],
+          destinations: newEircodes,
+          travelMode: 'DRIVING'
+        }, callback);
+
+      function callback(response, status) {
+       if (status == 'OK') {
+        var origins = response.originAddresses;
+        var destinations = response.destinationAddresses;
+        var distances = response.rows;
+
+        app.locations = distances[0].elements
+
+        const arr = [];
+
+        for(let i = 0; i<app.locations.length; i++){
+          arr.push(app.locations[i].distance.value);
+        }
+        arr.sort(function(a, b){return a-b})
+
+        const shortestDistance = arr[0];
+
+        // console.log(shortestDistance);
+
+        // console.log(app.locations);
+
+        const newArr = _.merge(shops, app.locations);
+
+        console.log(newArr);
+
+        app.newShops = newArr;
+
+        let minDistance = Math.min.apply(Math, newArr.map(function(o) {  return o.distance.value; }))
+
+        for(let i = 0; i<newArr.length; i++){
+          if(newArr[i].distance.value === minDistance){
+             app.shopId = shops[i].id;
+            }
+          }
+        }
+      }
+    }
+  },
+  beforeMount() {
+      this.calcDist();
   }
+
 }
 </script>
 
