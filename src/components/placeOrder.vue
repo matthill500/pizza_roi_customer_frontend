@@ -99,6 +99,8 @@
               this.$router.push({
                 path: '/success'
               })
+              localStorage.removeItem('cart');
+              this.cart = null;
             })
         })
       }

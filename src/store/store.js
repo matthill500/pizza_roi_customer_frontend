@@ -9,6 +9,7 @@ axios.defaults.baseURL = 'http://127.0.0.1:8000/api'
 export const store = new Vuex.Store({
   state:{
     token: localStorage.getItem('token') || null,
+    cart: localStorage.getItem('cart') || null,
     pizzas: [],
       first_name: null,
       last_name: null,
@@ -19,6 +20,7 @@ export const store = new Vuex.Store({
   },
   getters:{
     loggedIn(state){
+      console.log(state.cart);
        return state.token !== null
     },
     user(state){
@@ -52,7 +54,9 @@ export const store = new Vuex.Store({
     },
     setShops(state, shops){
       state.shops = shops
-      // console.log(state.shopEircodes)
+    },
+    destroyCart(state){
+      state.cart = null;
     },
     destroyToken(state){
       state.token = null
@@ -65,12 +69,9 @@ export const store = new Vuex.Store({
         axios.get('/shops')
           .then(response => {
             const shops = response.data.data
-          //  console.log(shops);
-            // const eircodes = shops.map(shop => (shop.eircode))
-            // console.log(eircodes);
             context.commit('setShops', shops)
             resolve(response)
-            // console.log(response)
+     
           })
           .catch(error => {
             console.log(error)
@@ -94,7 +95,6 @@ export const store = new Vuex.Store({
         })
           .then(response => {
             resolve(response)
-            // console.log(response)
           })
           .catch(error => {
             console.log(error)
@@ -107,16 +107,10 @@ export const store = new Vuex.Store({
       return new Promise((resolve, reject) => {
         axios.get('/user')
           .then(response => {
-            //  console.log(response.data);
-            // const token = response.data.token
-            // localStorage.setItem('token', token)
             context.commit('setUser', response.data)
-            // resolve(true)
-            // console.log(response)
           })
           .catch(error => {
             console.log(error)
-            // reject(false)
           })
           .finally(() => {
             resolve(true)
@@ -134,7 +128,6 @@ export const store = new Vuex.Store({
             localStorage.setItem('token', token)
             context.commit('retrieveToken', response.data)
             resolve(response)
-            // console.log(response)
           })
           .catch(error => {
             console.log(error)
@@ -144,17 +137,19 @@ export const store = new Vuex.Store({
     },
     logout(context){
       axios.defaults.headers.common['Authorization'] = 'Bearer '+context.state.token
-
       if(context.getters.loggedIn){
         return new Promise((resolve, reject) => {
           axios.post('/logout')
             .then(response => {
+              localStorage.removeItem('cart');
+              context.commit('destroyCart')
               localStorage.removeItem('token')
               context.commit('destroyToken')
               resolve(response)
-              // console.log(response)
             })
             .catch(error => {
+              localStorage.removeItem('cart');
+              context.commit('destroyCart')
               localStorage.removeItem('token')
               context.commit('destroyToken')
               reject(error)
@@ -184,7 +179,6 @@ export const store = new Vuex.Store({
           axios.get('/pizzas')
             .then(response => {
               resolve(response)
-              // console.log(response)
             })
             .catch(error => {
               reject(error)
@@ -200,7 +194,6 @@ export const store = new Vuex.Store({
           axios.get('/sides')
             .then(response => {
               resolve(response)
-              // console.log(response)
             })
             .catch(error => {
               reject(error)

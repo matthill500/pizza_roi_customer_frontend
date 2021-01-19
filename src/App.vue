@@ -39,7 +39,7 @@ export default {
       carTotal: function(){
         let sum = 0;
         for (let key in this.cart){
-          console.log(this.cart);
+          // console.log(this.cart);
           sum = sum+(this.cart[key].product.retailPrice * this.cart[key].qty);
         }
         return sum;
@@ -70,8 +70,12 @@ export default {
     deleteItem: function(id){
       if(this.cart[id].qty>1){
         this.cart[id].qty--;
+        localStorage.removeItem(this.cart);
+        localStorage.setItem('cart', JSON.stringify(this.cart));
       }else{
         this.cart.splice(id, 1);
+        localStorage.removeItem(this.cart);
+        localStorage.setItem('cart', JSON.stringify(this.cart));
       }
     },
     setCart: function(){
