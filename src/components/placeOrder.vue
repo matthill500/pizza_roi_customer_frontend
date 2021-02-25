@@ -81,10 +81,10 @@
       
           this.error = null;
           this.token = result.setupIntent.payment_method
-          // console.log(this.cart);
+          console.log(JSON.stringify(this.cart));
           axios.post('/orders',{
             price: this.carTotal,
-            shop_id:  this.shopId,
+            shop_id:  1,
             customer_id: this.user.customer_id,
             token: this.token,
             user_id: this.user.user_id,
@@ -95,6 +95,13 @@
               if(response.data.status !== 'success') {
                 this.error = result.error.message
                 return
+              }else if(response.data.status === 'success'){
+                axios.post('/IdealStock',{
+                  cart: this.cart
+                })
+                .then(response => {
+                 console.log(response);
+                  })
               }
               this.$router.push({
                 path: '/success'

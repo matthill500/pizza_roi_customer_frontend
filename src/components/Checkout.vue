@@ -50,7 +50,7 @@ import axios from 'axios'
 import Price from "./Price.vue";
 import PlaceOrder from './placeOrder.vue'
 import {mapGetters} from 'vuex'
-import $ from 'jquery'
+
 
 
 
@@ -80,7 +80,7 @@ export default{
 
       const shops = this.shops.shops;
 
-      console.log(shops);
+      // console.log(shops);
 
       let customerEircode = this.user.userEircode+', Ireland';
 
@@ -123,7 +123,7 @@ export default{
 
         const newArr = _.merge(shops, app.locations);
 
-        console.log(newArr);
+        // console.log(newArr);
 
         app.newShops = newArr;
 
@@ -139,7 +139,7 @@ export default{
     }
   },
   beforeMount() {
-      this.calcDist();
+      // this.calcDist();
   }
 
 }
