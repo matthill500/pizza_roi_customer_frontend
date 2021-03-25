@@ -81,7 +81,7 @@
       
           this.error = null;
           this.token = result.setupIntent.payment_method
-          console.log(JSON.stringify(this.cart));
+          // console.log(JSON.stringify(this.cart));
           axios.post('/orders',{
             price: this.carTotal,
             shop_id:  1,
