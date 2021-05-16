@@ -139,7 +139,7 @@ export default{
     }
   },
   beforeMount() {
-      // this.calcDist();
+      this.calcDist();
   }
 
 }

@@ -1,6 +1,6 @@
 <template>
   <nav class="navbar navbar-expand-lg navbar-light">
-      <router-link to="/home" class="navbar-brand">Pizza ROI</router-link>
+      <router-link to="/products" class="navbar-brand">Pizza ROI</router-link>
     <div class="collapse navbar-collapse justify-content-end" id="navbarNavAltMarkup">
       <div class="navbar-nav">
         <li v-if="!loggedIn"><router-link to="/login" class="nav-item nav-link">Login</router-link></li>
